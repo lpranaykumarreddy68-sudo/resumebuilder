@@ -30,6 +30,8 @@ const MOCK_JD = `Senior Product Designer
 We are looking for a high-performance Product Designer to lead our AI-driven SaaS workflows. Must have experience with Scalable Design Systems, Bento Grids, Data-Driven Iteration, and High-Fidelity Prototyping. Familiarity with Figma and Tailwind CSS is a major plus. You will collaborate with engineering teams to deliver world-class user experiences.
 `;
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export default function App() {
   // Screen state
   const [currentScreen, setCurrentScreen] = useState('ingestion'); // ingestion | workspace
@@ -94,7 +96,7 @@ export default function App() {
         const formData = new FormData();
         formData.append('file', file);
         
-        const response = await fetch('/api/parse', {
+        const response = await fetch(`${API_BASE}/api/parse`, {
           method: 'POST',
           body: formData
         });
@@ -138,7 +140,7 @@ export default function App() {
     setIsLoading(true);
     
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -336,7 +338,7 @@ export default function App() {
     
     setIsLoading(true);
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -968,7 +970,7 @@ export default function App() {
                             if (newInstructions) {
                               setIsLoading(true);
                               try {
-                                const response = await fetch('/api/analyze', {
+                                const response = await fetch(`${API_BASE}/api/analyze`, {
                                   method: 'POST',
                                   headers: {
                                     'Content-Type': 'application/json'
