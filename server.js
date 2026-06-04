@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import * as pdf from 'pdf-parse';
+import pdf from 'pdf-parse-debugging-disabled';
 import mammoth from 'mammoth';
 
 dotenv.config();
@@ -30,8 +30,7 @@ app.post('/api/parse', upload.single('file'), async (req, res) => {
     let parsedText = "";
 
     if (mimeType === 'application/pdf') {
-      const parser = new pdf.PDFParse({ data: fileBuffer });
-      const result = await parser.getText();
+      const result = await pdf(fileBuffer);
       parsedText = result.text;
     } else if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
