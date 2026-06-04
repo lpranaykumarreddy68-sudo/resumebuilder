@@ -3,8 +3,9 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import pdf from 'pdf-parse-debugging-disabled';
+import { getDocumentProxy, extractText } from 'unpdf';
 import mammoth from 'mammoth';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -30,8 +31,9 @@ app.post('/api/parse', upload.single('file'), async (req, res) => {
     let parsedText = "";
 
     if (mimeType === 'application/pdf') {
-      const result = await pdf(fileBuffer);
-      parsedText = result.text;
+      const pdfProxy = await getDocumentProxy(new Uint8Array(fileBuffer));
+      const { text } = await extractText(pdfProxy, { mergePages: true });
+      parsedText = text;
     } else if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
       mimeType === 'application/msword'
@@ -266,7 +268,7 @@ ${userInstructions || "Optimize for compatibility, integration of skills, and st
 // Serve static assets
 const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
-app.get('*', (req, res) => {
+app.get('*all', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
